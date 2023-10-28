@@ -18,14 +18,27 @@ import java.io.IOException;
 @RequestMapping("/image")
 public class StorageServiceApplication {
     private StorageService storageService;
+
     @PostMapping
     public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
         String uploadImage = storageService.uploadImage(file);
         return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
     }
-    @GetMapping("/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable("") String fileName) throws IOException {
+    @GetMapping("/{name}")
+    public ResponseEntity<?> downloadImage(@PathVariable("name") String fileName) throws IOException {
         byte[] imageData = storageService.downloadImage(fileName);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(imageData);
+
+    }
+
+    @PostMapping("/file_system")
+    public ResponseEntity<?> uploadImageToFileSystem(@RequestParam("image")MultipartFile file) throws IOException {
+        String uploadImage = storageService.uploadImageToFileSystem(file);
+        return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
+    }
+    @GetMapping("/file_system/{name}")
+    public ResponseEntity<?> downloadImageToFileSystem(@PathVariable("name") String fileName) throws IOException {
+        byte[] imageData = storageService.downloadImageFromFileSystem(fileName);
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(imageData);
 
     }
