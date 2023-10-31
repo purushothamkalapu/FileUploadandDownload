@@ -8,6 +8,7 @@ public interface StorageService {
     public String uploadImage(MultipartFile file) throws IOException;
     public byte[] downloadImage(String fileName) throws IOException;
 
-    public String uploadImageToFileSystem(MultipartFile file) throws IOException;
+    //public String uploadImageToFileSystem(MultipartFile file) throws IOException;
+    public String uploadImageToFileSystem(MultipartFile file, String folderName) throws IOException;
     public byte[] downloadImageFromFileSystem(String fileName) throws IOException;
 }

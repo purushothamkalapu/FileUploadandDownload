@@ -21,7 +21,7 @@ public class StorageServiceImpl implements StorageService {
     private StorageRepository storageRepository;
     private FileDataRepository fileDataRepository;
 
-    private final String folderPath = "C:\\Users\\Purushotham\\Desktop\\MyFiles\\";
+    private final String rootFolderName = "C:\\Users\\Purushotham\\Desktop\\MyFiles\\";
     @Override
     public String uploadImage(MultipartFile file) throws IOException {
         ImageData imageData = storageRepository.save(ImageData.builder()
@@ -41,13 +41,27 @@ public class StorageServiceImpl implements StorageService {
         return images;
     }
 
-    @Override
-    public String uploadImageToFileSystem(MultipartFile file) throws IOException {
+    /*@Override
+    public String uploadImageToFileSystem(MultipartFile file, String folderName) throws IOException {
         String filePath = folderPath+file.getOriginalFilename();
         FileData fileData = fileDataRepository.save(FileData.builder()
                         .name(file.getOriginalFilename())
                         .type(file.getContentType())
                         .filePath(filePath)
+                .build());
+        file.transferTo(new File(filePath));
+        if(fileData != null){
+            return "File upload successfully : "+filePath;
+        }
+        return null;
+    }*/
+    @Override
+    public String uploadImageToFileSystem(MultipartFile file, String folderName) throws IOException {
+        String filePath = rootFolderName+folderName+"\\"+file.getOriginalFilename();
+        FileData fileData = fileDataRepository.save(FileData.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .filePath(filePath)
                 .build());
         file.transferTo(new File(filePath));
         if(fileData != null){

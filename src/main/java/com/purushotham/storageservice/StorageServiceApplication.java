@@ -2,6 +2,8 @@ package com.purushotham.storageservice;
 
 import com.purushotham.storageservice.service.StorageService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -18,11 +20,19 @@ import java.io.IOException;
 @RequestMapping("/image")
 public class StorageServiceApplication {
     private StorageService storageService;
+    private static Logger LOGGER = LoggerFactory.getLogger(StorageServiceApplication.class);
+    @GetMapping("/welcome")
+    public ResponseEntity<?> welcome(){
+        return new ResponseEntity<>("Welcome", HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
+        LOGGER.debug("Uploading started");
         String uploadImage = storageService.uploadImage(file);
+        LOGGER.debug("Uploading END");
         return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
+
     }
     @GetMapping("/{name}")
     public ResponseEntity<?> downloadImage(@PathVariable("name") String fileName) throws IOException {
@@ -32,8 +42,8 @@ public class StorageServiceApplication {
     }
 
     @PostMapping("/file_system")
-    public ResponseEntity<?> uploadImageToFileSystem(@RequestParam("image")MultipartFile file) throws IOException {
-        String uploadImage = storageService.uploadImageToFileSystem(file);
+    public ResponseEntity<?> uploadImageToFileSystem(@RequestParam("image")MultipartFile file, @RequestParam("folderName") String folderName) throws IOException {
+        String uploadImage = storageService.uploadImageToFileSystem(file, folderName);
         return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
     }
     @GetMapping("/file_system/{name}")
